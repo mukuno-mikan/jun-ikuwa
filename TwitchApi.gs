@@ -29,9 +29,11 @@ function getTwitchAccessToken() {
   return options;
 }
 
+// TwitchAPIを実行する
 function RunTwitch(url){
   const options = getTwitchAccessToken();
 
+  url = TWITCH_API_URL + url;
   const response = UrlFetchApp.fetch(url, options);
   const data = JSON.parse(response.getContentText());
 
@@ -45,19 +47,19 @@ function RunTwitch(url){
 
 // ユーザー情報取得
 function getTwitchCreatorInfo(username) {
-  const url = `${TWITCH_API_URL}/users?login=${username}`;
+  const url = `/users?login=${username}`;
   RunTwitch(url);
 }
 
 // チャンネル情報取得
 function getTwitchChannelsInfo(username) {
-  const url = `${TWITCH_API_URL}/search/channels?query=${username}`;
+  const url = `/search/channels?query=${username}`;
   RunTwitch(url);
 }
 
 // 配信情報取得
 function getTwitchStreamInfo(username) {
-  const url = `${TWITCH_API_URL}/streams?user_login=${username}`;
+  const url = `/streams?user_login=${username}`;
   RunTwitch(url);
 }
 
