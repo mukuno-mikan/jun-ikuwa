@@ -8,5 +8,13 @@
 https://dev.twitch.tv/docs/extensions/frontend-api-usage/#rate-limits
 
 ## GASのURL Fetch
-20000 request / day = 13.88888888890 request / minutes  
+13.88888888890 request / minutes
 https://developers.google.com/apps-script/guides/services/quotas?hl=ja
+
+# 容量
+
+## Googleスプレッドシート
+セル数、5,000,000が上限
+
+## Googleドライブ
+15GB
