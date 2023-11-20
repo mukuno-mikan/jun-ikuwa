@@ -1,5 +1,3 @@
-const TWITCH_API_URL = 'https://api.twitch.tv/helix';
-
 // Twitch APIへのアクセストークンを取得する関数
 function getTwitchAccessToken() {
   const url = 'https://id.twitch.tv/oauth2/token';
@@ -18,58 +16,62 @@ function getTwitchAccessToken() {
   const response = UrlFetchApp.fetch(url, options);
   const data = JSON.parse(response.getContentText());
 
-  options = {
-    'method': 'get',
-    'headers': {
-      'Client-ID': TWITCH_CLIENT_ID,
-      'Authorization': `Bearer ${data.access_token}`
-    }
-  };
-
-  return options;
+  return data.access_token;
 }
 
 // TwitchAPIを実行する
-function RunTwitch(url){
-  const options = getTwitchAccessToken();
+function RunTwitchHelixAPI(urlBelowHelix){
+  const url = 'https://api.twitch.tv/helix' + urlBelowHelix;
+  const accessToken = getTwitchAccessToken();
 
-  url = TWITCH_API_URL + url;
+  const options = {
+    'method': 'get',
+    'headers': {
+      'Client-ID': TWITCH_CLIENT_ID,
+      'Authorization': `Bearer ${accessToken}`
+    }
+  };
+
   const response = UrlFetchApp.fetch(url, options);
-  const data = JSON.parse(response.getContentText());
+  Logger.log(response);
 
-  if (data.data.length > 0) {
-    const creator = data.data[0];
-    Logger.log(creator);
-  } else {
-    Logger.log('User not found.');
-  }
+  return response;
 }
 
-// ユーザー情報取得
-function getTwitchCreatorInfo(username) {
-  const url = `/users?login=${username}`;
-  RunTwitch(url);
+/**
+ * 全ストリームの一覧を取得する。
+ * https://dev.twitch.tv/docs/api/reference/#get-streams
+ */
+function getTwitchStreams(query) {
+  const urlBelowHelix = `/streams?` + query;
+  return RunTwitchHelixAPI(urlBelowHelix);
 }
 
-// チャンネル情報取得
-function getTwitchChannelsInfo(username) {
-  const url = `/search/channels?query=${username}`;
-  RunTwitch(url);
-}
+// // ユーザー情報取得
+// function getTwitchCreatorInfo(username) {
+//   const url = `/users?login=${username}`;
+//   RunTwitch(url);
+// }
 
-// 配信情報取得
-function getTwitchStreamInfo(username) {
-  const url = `/streams?user_login=${username}`;
-  RunTwitch(url);
-}
+// // チャンネル情報取得
+// function getTwitchChannelsInfo(username) {
+//   const url = `/search/channels?query=${username}`;
+//   RunTwitch(url);
+// }
 
 function debug(){
-  getTwitchCreatorInfo("kato_junichi0817");
-  
-  getTwitchChannelsInfo("kato_junichi0817");
-  // getTwitchChannelsInfo("oniyadayo");
+  // var data = getStream(
+  //   "user_login=kato_junichi0817"
+  //   + "&user_login=yuyuta0702"
+  //   + "&user_login=hanjoudesu"
+  //   + "&user_login=oniyadayo"
+  // );
 
-  getTwitchStreamInfo("kato_junichi0817");
-  // getTwitchStreamInfo("oniyadayo");
+  var response = getTwitchStreams(
+    "user_login=okinawapex"
+    + "&user_login=petit2434"
+    // + "&user_login=hanjoudesu"
+    // + "&user_login=oniyadayo"
+  );
+
 }
-
