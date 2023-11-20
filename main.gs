@@ -1,44 +1,47 @@
 const SHEET_NAME = 'viewer_counts';
 
 function triggerGetTwitchStreams(){
-  // APIからデータを取得する
+  // var response = getTwitchStreams(
+  //   "user_login=kato_junichi0817"
+  //   + "&user_login=yuyuta0702"
+  //   + "&user_login=hanjoudesu"
+  //   + "&user_login=oniyadayo"
+  // );
+
   var response = getTwitchStreams(
-    "user_login=kato_junichi0817"
-    + "&user_login=yuyuta0702"
-    + "&user_login=hanjoudesu"
-    + "&user_login=oniyadayo"
+    "user_login=cr_rion"
+    + "&user_login=fa_inkya"
+    // + "&user_login=hanjoudesu"
+    // + "&user_login=oniyadayo"
   );
+
+  var data = checkAndFormatData(response);
+  if(data == null) return;
+
+  writeData(data);
 }
 
-function writeDataToSheet(url) {
-  // 実行日時を取得する
-  var date = new Date();
+function checkAndFormatData(data){
+  // JSONをobjectで扱えるように変換
+  const formattedData = JSON.parse(data.getContentText());
+  Logger.log(formattedData.data);
 
-  var formattedDate = date.toLocaleDateString(
-    "ja-JP",
-    { year: 'numeric', month: '2-digit', day: '2-digit' }
-  );
+  return formattedData.data.length >= 1 ? formattedData.data : null;
+}
 
-  
-
-    // const data = JSON.parse(response.getContentText());
-  
-  if (data.data.length > 0) {
-    const creator = data.data;
-    return creator;
-  } else {
-    return null;
-  }
-  
+function writeData(data) {
+  var sheet = getSheet();
+  var timestamp = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm");
 
   // データをシートに書き込む
   for (var i = 0; i < data.length; i++) {
     let next_row = sheet.getLastRow() + 1;
+
     sheet.appendRow([
       data[i].user_name,
       data[i].viewer_count,
-      '=IFERROR(B2-INDEX(B$1:B1,MAX(IF(A2=A$1:A1,ROW(A$1:A1)))),0)',
-      formattedDate
+      // '=IFERROR(B2-INDEX(B$1:B1,MAX(IF(A2=A$1:A1,ROW(A$1:A1)))),0)',
+      timestamp
     ]);
   }
 }
@@ -50,13 +53,13 @@ function getSheet(){
   // 存在しないときは、作成する
   if(sheet == null){
     sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet();
-    sheet.setName(sheetName);
+    sheet.setName(SHEET_NAME);
     
     var header = [
       "user_name",
       "viewer_count",
       "difference_previous",
-      "created_at"
+      "timestamp"
     ];
 
     sheet.appendRow(header);
