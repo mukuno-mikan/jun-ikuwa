@@ -1,19 +1,19 @@
 const SHEET_NAME = 'viewer_counts';
 
 function triggerGetTwitchStreams(){
-  // var response = getTwitchStreams(
-  //   "user_login=kato_junichi0817"
-  //   + "&user_login=yuyuta0702"
-  //   + "&user_login=hanjoudesu"
-  //   + "&user_login=oniyadayo"
-  // );
-
   var response = getTwitchStreams(
-    "user_login=cr_rion"
-    + "&user_login=fa_inkya"
-    // + "&user_login=hanjoudesu"
-    // + "&user_login=oniyadayo"
+    "user_login=kato_junichi0817"
+    + "&user_login=yuyuta0702"
+    + "&user_login=hanjoudesu"
+    + "&user_login=oniyadayo"
   );
+
+  // var response = getTwitchStreams(
+  //   "user_login=cr_rion"
+  //   + "&user_login=fa_inkya"
+  //   // + "&user_login=hanjoudesu"
+  //   // + "&user_login=oniyadayo"
+  // );
 
   var data = checkAndFormatData(response);
   if(data == null) return;
@@ -31,7 +31,7 @@ function checkAndFormatData(data){
 
 function writeData(data) {
   var sheet = getSheet();
-  var timestamp = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm");
+  var timestamp = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
 
   // データをシートに書き込む
   for (var i = 0; i < data.length; i++) {
@@ -41,6 +41,7 @@ function writeData(data) {
       data[i].user_name,
       data[i].viewer_count,
       // '=IFERROR(B2-INDEX(B$1:B1,MAX(IF(A2=A$1:A1,ROW(A$1:A1)))),0)',
+      '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)',
       timestamp
     ]);
   }

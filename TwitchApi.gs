@@ -2,8 +2,8 @@
 function getTwitchAccessToken() {
   const url = 'https://id.twitch.tv/oauth2/token';
   const payload = {
-    'client_id': TWITCH_CLIENT_ID,
-    'client_secret': TWITCH_CLIENT_SECRET,
+    'client_id': getPropertyTwitchClientId(),
+    'client_secret': getPropertyTwitchClientSecret(),
     'grant_type': 'client_credentials'
   };
 
@@ -27,7 +27,7 @@ function RunTwitchHelixAPI(urlBelowHelix){
   const options = {
     'method': 'get',
     'headers': {
-      'Client-ID': TWITCH_CLIENT_ID,
+      'Client-ID': getPropertyTwitchClientId(),
       'Authorization': `Bearer ${accessToken}`
     }
   };
@@ -69,7 +69,7 @@ function debug(){
 
   var response = getTwitchStreams(
     "user_login=okinawapex"
-    + "&user_login=petit2434"
+    + "&user_login=vodkavdk"
     // + "&user_login=hanjoudesu"
     // + "&user_login=oniyadayo"
   );
