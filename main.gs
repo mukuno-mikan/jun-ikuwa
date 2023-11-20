@@ -6,6 +6,7 @@ function triggerGetTwitchStreams(){
     + "&user_login=yuyuta0702"
     + "&user_login=hanjoudesu"
     + "&user_login=oniyadayo"
+    + "&user_login=euriece"
   );
 
   // var response = getTwitchStreams(
@@ -49,7 +50,7 @@ function writeData(data) {
 
 function getSheet(){
   // シートを取得する
-  var sheet = SpreadsheetApp.openById(SPREAD_SHEET_ID).getSheetByName(SHEET_NAME);
+  var sheet = SpreadsheetApp.openById(getPropertySpreadsheetId()).getSheetByName(SHEET_NAME);
 
   // 存在しないときは、作成する
   if(sheet == null){
