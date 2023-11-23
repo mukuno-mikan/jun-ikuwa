@@ -39,11 +39,21 @@ function writeData(data) {
   for (var i = 0; i < data.length; i++) {
     let next_row = sheet.getLastRow() + 1;
 
+    /**
+     * 例）C7に入力されている式
+     * =IFERROR(B8-INDEX(B$1:B7,MAX(IF(A8=A$1:A7,ROW(A$1:A7)))),0)
+     * 
+     * 前回差 = IFERROR(B8-[前回のviewer_count],0)
+     * [前回のviewer_count] = INDEX(B$1:B7,[user_nameが一致する一番大きい行番号])
+     * [user_nameが一致する一番大きい行番号] = MAX([user_nameが一致する行番号郡])
+     * [user_nameが一致する行番号郡] = IF(A8=A$1:A7,ROW(A$1:A7))
+     */
+    let difference_previous = '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)';
+
     sheet.appendRow([
       data[i].user_name,
       data[i].viewer_count,
-      // '=IFERROR(B2-INDEX(B$1:B1,MAX(IF(A2=A$1:A1,ROW(A$1:A1)))),0)',
-      '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)',
+      difference_previous,
       timestamp
     ]);
   }
