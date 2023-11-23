@@ -40,6 +40,11 @@ function writeData(data) {
     const next_row = sheet.getLastRow() + 1;
 
     /**
+     * 任意ユーザーの前回データがある行番号を取得
+     */
+
+
+    /**
      * 例）C7に入力されている式
      * =IFERROR(B8-INDEX(B$1:B7,MAX(IF(A8=A$1:A7,ROW(A$1:A7)))),0)
      * 
@@ -48,17 +53,55 @@ function writeData(data) {
      * [user_nameが一致する一番大きい行番号] = MAX([user_nameが一致する行番号郡])
      * [user_nameが一致する行番号郡] = IF(A8=A$1:A7,ROW(A$1:A7))
      */
-    const difference_previous = '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)';
+    let differencePreviousFormula = '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)';
 
-    const started_at = Utilities.formatDate(new Date(data[i].started_at), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
+    
+
+    const startedAt = Utilities.formatDate(new Date(data[i].started_at), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
 
     sheet.appendRow([
       data[i].user_name,
       data[i].viewer_count,
-      difference_previous,
+      differencePreviousFormula,
       timestamp,
-      started_at
+      startedAt
     ]);
+
+    let difference_previous = sheet.getRange("C" + next_row).getValue();
+    Logger.log(difference_previous);
+    if(difference_previous == 0) return;
+
+    /**
+     * 前回の配信の最後の視聴者数との差を前回差としないようにする。
+     * 
+     * 例）C7に入力されている式
+     * =IFERROR(IF(E8=INDEX(E$1:E7,MAX(IF(A8=A$1:A7,ROW(A$1:A7)))),difference_previous,0),0)
+     * 
+     * started_atが一致していたら、前回比を記載し、そうでければ0を記載。 = IFERROR(IF(E8=[前回のstarted_at],difference_previous,0),0)
+     * [前回のstarted_at] = INDEX(E$1:E7,[user_nameが一致する一番大きい行番号])
+     * [user_nameが一致する一番大きい行番号] = MAX([user_nameが一致する行番号郡])
+     * [user_nameが一致する行番号郡] = IF(A8=A$1:A7,ROW(A$1:A7))
+     */
+    differencePreviousFormula = '=IFERROR(IF(E' + next_row + '=INDEX(E$1:E' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),' + difference_previous + ',0),0)';
+
+    sheet.getRange('C' + next_row).setFormula(differencePreviousFormula);
+
+    difference_previous = sheet.getRange("C" + next_row).getValue();
+    Logger.log(difference_previous);
+    if(difference_previous == 0) return;return;
+
+    /**
+     * 前回の配信の最後の視聴者数との差を前回差としないようにする。
+     * 
+     * 例）C7に入力されている式
+     * =IFERROR(IF(E8=INDEX(E$1:E7,MAX(IF(A8=A$1:A7,ROW(A$1:A7)))),difference_previous,0),0)
+     * 
+     * started_atが一致していたら、前回比を記載し、そうでければ0を記載。 = IFERROR(IF(E8=[前回のstarted_at],difference_previous,0),0)
+     * [前回のstarted_at] = INDEX(E$1:E7,[user_nameが一致する一番大きい行番号])
+     * [user_nameが一致する一番大きい行番号] = MAX([user_nameが一致する行番号郡])
+     * [user_nameが一致する行番号郡] = IF(A8=A$1:A7,ROW(A$1:A7))
+     */
+    // differencePreviousFormula = '=IFERROR(IF(E' + next_row + '=INDEX(E$1:E' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),' + difference_previous + ',0),0)';
   }
 }
 
@@ -81,4 +124,8 @@ function getSheet(){
     sheet.appendRow(header);
   }
   return sheet;
+}
+
+function debug(){
+  Logger.log(getSheet().getRange("C9").getValue());
 }
