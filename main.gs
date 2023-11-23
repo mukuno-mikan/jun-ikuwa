@@ -7,6 +7,7 @@ function triggerGetTwitchStreams(){
     + "&user_login=hanjoudesu"
     + "&user_login=oniyadayo"
     + "&user_login=euriece"
+    + "&user_login=mokouliszt1"
   );
 
   // var response = getTwitchStreams(
