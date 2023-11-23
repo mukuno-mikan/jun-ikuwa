@@ -37,7 +37,7 @@ function writeData(data) {
 
   // データをシートに書き込む
   for (var i = 0; i < data.length; i++) {
-    let next_row = sheet.getLastRow() + 1;
+    const next_row = sheet.getLastRow() + 1;
 
     /**
      * 例）C7に入力されている式
@@ -48,13 +48,16 @@ function writeData(data) {
      * [user_nameが一致する一番大きい行番号] = MAX([user_nameが一致する行番号郡])
      * [user_nameが一致する行番号郡] = IF(A8=A$1:A7,ROW(A$1:A7))
      */
-    let difference_previous = '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)';
+    const difference_previous = '=IFERROR(B' + next_row + '-INDEX(B$1:B' + (next_row - 1) + ',MAX(IF(A' + next_row + '=A$1:A' + (next_row - 1)+ ',ROW(A$1:A' + (next_row - 1) + ')))),0)';
+
+    const started_at = Utilities.formatDate(new Date(data[i].started_at), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
 
     sheet.appendRow([
       data[i].user_name,
       data[i].viewer_count,
       difference_previous,
-      timestamp
+      timestamp,
+      started_at
     ]);
   }
 }
