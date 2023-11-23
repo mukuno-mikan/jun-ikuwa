@@ -61,7 +61,7 @@ function writeData(data) {
     ]);
 
     let difference_previous = sheet.getRange("C" + next_row).getValue();
-    if(difference_previous == 0) return;
+    if(difference_previous == 0) continue;
 
     /**
      * 前回の配信の最後の視聴者数との差を前回差としないようにする。
@@ -76,7 +76,7 @@ function writeData(data) {
     sheet.getRange('C' + next_row).setFormula(differencePreviousFormula);
 
     difference_previous = sheet.getRange("C" + next_row).getValue();
-    if(difference_previous == 0) return;
+    if(difference_previous == 0) continue;
 
     /**
      * 配信開始直後の視聴者数増加を前回差としないようにする。
@@ -91,7 +91,7 @@ function writeData(data) {
     sheet.getRange('C' + next_row).setFormula(differencePreviousFormula);
 
     difference_previous = sheet.getRange("C" + next_row).getValue();
-    if(difference_previous == 0) return;
+    if(difference_previous == 0) continue;
 
     /**
      * 配信開始直後の視聴者数増加を前回差としないようにする。
