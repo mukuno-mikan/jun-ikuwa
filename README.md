@@ -4,6 +4,9 @@
 
 実際に何人ぐらいが流れているのかを調べてみました。
 
+# 成果物
+https://lookerstudio.google.com/reporting/ee45624d-5291-4713-b0bf-9a875c74752c/page/p_5gllpjoxbd
+
 ![スクリーンショット 2023-11-24 155247](https://github.com/mukuno-mikan/jun-ikuwa/assets/151359967/eefb7b57-dfd3-45b4-90bb-453b0057a603)
 
 
@@ -24,7 +27,7 @@
 
 # レートリミット
 - [TwitchAPI ( 30 request / minutes )](https://dev.twitch.tv/docs/extensions/frontend-api-usage/#rate-limits)
-- [GAS URL取得の呼び出し ( 13 request / minutes )](https://developers.google.com/apps-script/guides/services/quotas?hl=ja)
+- [GAS URL取得の呼び出し ( 13 request / minutes ← 20,000 / day)](https://developers.google.com/apps-script/guides/services/quotas?hl=ja)
 
 # 容量
 - Googleスプレッドシート(セル数、5,000,000が上限)
